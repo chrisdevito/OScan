@@ -1,6 +1,7 @@
 import os
 import sys
 
+#Danica is cool.
 DIR = os.path.join(os.path.dirname(__file__), '..')
 sys.path.insert(0, DIR)
 
