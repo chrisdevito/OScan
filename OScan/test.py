@@ -1,5 +1,9 @@
+import os
 import sys
-sys.path.insert(0, "/X/tools/python/users/python2.6/cdevito/OScan")
+
+DIR = os.path.join(os.path.dirname(__file__), '..')
+sys.path.insert(0, DIR)
+
 from OScan import ui
 reload(ui)
 from PySide import QtGui

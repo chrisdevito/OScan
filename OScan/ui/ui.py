@@ -2,13 +2,11 @@ import os
 import sys
 from PySide import QtGui, QtCore
 
-#Relative path.
 DIR = os.path.dirname(__file__)
-
 
 class comboBox(QtGui.QComboBox):
     '''
-    Returns a radio button for our UI.
+    Inherits QComboBox and creates it.
     '''
     def __init__(self, name, parent=None):
         '''
@@ -17,6 +15,24 @@ class comboBox(QtGui.QComboBox):
         super(comboBox, self).__init__(parent)
         self.setObjectName(name)
 
+class labelWidget(QtGui.QLabel):
+    '''
+    Inherits QLabel and creates it.
+    '''
+    def __init__(self, name, parent=None):
+        '''
+        Our label init.
+        '''
+        super(labelWidget, self).__init__(parent)
+
+        self.setText(name)
+        self.setObjectName("{0}_lbl".format(name))
+
+        #Font.
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.setFont(font)
+
 
 class UI(QtGui.QWidget):
     '''
@@ -24,7 +40,7 @@ class UI(QtGui.QWidget):
     '''
     def __init__(self, parent=None):
         '''
-        @param parent - Window to parent to.
+        @param parent - QMainWindow to parent to.
         '''
         super(UI, self).__init__(parent)
 
@@ -56,8 +72,12 @@ class UI(QtGui.QWidget):
         '''
         Creates our layout.
         '''
-        self.typeCmboBox = comboBox("Calculate")
-        self.central_boxLayout.addWidget(self.typeCmboBox)
+        #Width label.
+        self.width_Lbl = labelWidget("Width :")
+        self.height_Lbl = labelWidget("Height:")
+
+        self.central_boxLayout.addWidget(self.width_Lbl)
+        self.central_boxLayout.addWidget(self.height_Lbl)
 
     def create_connections(self):
         '''
