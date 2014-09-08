@@ -5,33 +5,36 @@ from PySide import QtGui, QtCore
 
 DIR = os.path.dirname(__file__)
 
+
 class SpinBox(QtGui.QSpinBox):
     '''
     Inherits QSpinBox and creates it.
     '''
-    def __init__(self, name, value, parent = None):
+    def __init__(self, name, value, parent=None):
         '''
         Our line init.
         '''
         super(SpinBox, self).__init__(parent)
         self.setObjectName(name)
         self.setMaximum(100000)
-        self.setMinimum(-100000)        
+        self.setMinimum(-100000)
         self.setValue(value)
+
 
 class DoubleSpinBox(QtGui.QDoubleSpinBox):
     '''
     Inherits QDoubleSpinBox and creates it.
     '''
-    def __init__(self, name, value, parent = None):
+    def __init__(self, name, value, parent=None):
         '''
         Our line init.
         '''
         super(DoubleSpinBox, self).__init__(parent)
         self.setObjectName(name)
         self.setMaximum(100000)
-        self.setMinimum(-100000)        
+        self.setMinimum(-100000)
         self.setValue(value)
+
 
 class ComboBox(QtGui.QComboBox):
     '''
@@ -43,6 +46,7 @@ class ComboBox(QtGui.QComboBox):
         '''
         super(ComboBox, self).__init__(parent)
         self.setObjectName(name)
+
 
 class Label(QtGui.QLabel):
     '''
@@ -62,6 +66,7 @@ class Label(QtGui.QLabel):
         font.setPointSize(10)
         self.setFont(font)
 
+
 class GroupBox(QtGui.QGroupBox):
     '''
     Inherits QGroupBox and creates it.
@@ -72,6 +77,7 @@ class GroupBox(QtGui.QGroupBox):
         '''
         super(GroupBox, self).__init__(name, parent)
         self.setObjectName("{0}_grpBox".format(name))
+
 
 class UI(QtGui.QWidget):
     '''
