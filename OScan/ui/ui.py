@@ -1,6 +1,4 @@
 import os
-import sys
-from functools import partial
 from PySide import QtGui, QtCore
 
 DIR = os.path.dirname(__file__)
@@ -169,6 +167,19 @@ class UI(QtGui.QWidget):
         self.height_boxLayout.addWidget(self.height_Lbl)
         self.height_boxLayout.addWidget(self.height_spnBox)
 
+        #Camera aperture.
+        self.hAper = DoubleSpinBox("hAper_spnBox", 0.9449244)
+        self.hAper.setDecimals(5)
+        self.hAper.setValue(0.9449244)
+        self.vAper = DoubleSpinBox("vAper_spnBox", 0.4982999)
+        self.vAper.setDecimals(5)
+        self.vAper.setValue(0.4982999)
+
+        #Aperture layout.
+        self.aper_boxLayout = QtGui.QHBoxLayout()
+        self.aper_boxLayout.addWidget(self.hAper)
+        self.aper_boxLayout.addWidget(self.vAper)
+
         #Main layout.
         self.main_boxLayout = QtGui.QVBoxLayout()
         self.main_boxLayout.addLayout(self.width_boxLayout)
@@ -181,6 +192,7 @@ class UI(QtGui.QWidget):
 
         #Final add to central.
         self.central_boxLayout.addWidget(self.grp_layout)
+        self.central_boxLayout.addLayout(self.aper_boxLayout)
 
     def create_connections(self):
         '''
