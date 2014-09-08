@@ -166,6 +166,7 @@ class UI(QtGui.QWidget):
         self.main_boxLayout.addLayout(self.height_boxLayout)
         self.main_boxLayout.addLayout(self.pph_boxLayout)
 
+        #Set group layout.
         self.grp_layout.setLayout(self.main_boxLayout)
 
         #Final add to central.
