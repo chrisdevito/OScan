@@ -135,6 +135,8 @@ class UI(QtGui.QWidget):
         self.width_cmbBox.addItem("Percent")
         self.width_cmbBox.addItem("Pixels")
         self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 100.0)
+        self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                      QtGui.QSizePolicy.Minimum)
 
         #Width Percent/pixel layout.
         self.ppw_boxLayout = QtGui.QHBoxLayout()
@@ -153,6 +155,8 @@ class UI(QtGui.QWidget):
         self.height_cmbBox.addItem("Percent")
         self.height_cmbBox.addItem("Pixels")
         self.pph_spnBox = DoubleSpinBox("pph_spnBox", 100.0)
+        self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                      QtGui.QSizePolicy.Minimum)
 
         #Height Percent/pixel layout.
         self.pph_boxLayout = QtGui.QHBoxLayout()
@@ -194,8 +198,12 @@ class UI(QtGui.QWidget):
 
         if index == 1:
             self.pph_spnBox = SpinBox("pph_spnBox", 1)
+            self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                          QtGui.QSizePolicy.Minimum)
         elif index == 0:
             self.pph_spnBox = DoubleSpinBox("pph_spnBox", 100.0)
+            self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                          QtGui.QSizePolicy.Minimum)
 
         self.pph_boxLayout.insertWidget(0, self.pph_spnBox)
 
@@ -208,7 +216,12 @@ class UI(QtGui.QWidget):
 
         if index == 1:
             self.ppw_spnBox = SpinBox("ppw_spnBox", 1)
+            self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                          QtGui.QSizePolicy.Minimum)
+
         elif index == 0:
             self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 100.0)
+            self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                          QtGui.QSizePolicy.Minimum)
 
         self.ppw_boxLayout.insertWidget(0, self.ppw_spnBox)
