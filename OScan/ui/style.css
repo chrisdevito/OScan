@@ -1,0 +1,58 @@
+QWidget{
+    background-color: rgb(55, 55, 55);
+    color: rgb(200, 200, 200);
+}
+
+QLabel{
+    color: rgb(235, 235, 235);
+}
+
+QGroupBox{
+    color: rgb(235, 235, 235);
+}
+
+QComboBox{
+    color: rgb(235, 235, 235);
+    background: rgb(75, 75, 75);
+}
+
+QLineEdit{
+    color: rgb(235, 235, 235);
+    background-color: rgb(75, 75, 75);
+}
+
+QLineEdit:focus{
+    border: 1 solid rgb(241, 205, 100);
+}
+
+QDoubleSpinBox{
+    height: 34;
+    padding: 5;
+    text-align: "center";
+    color: rgb(235, 235, 235);
+    background-color: rgb(75, 75, 75);
+}
+
+QDoubleSpinBox:focus{
+    height: 34;
+    border: 1 solid rgb(0, 170, 200);
+    border-color: rgb(0, 170, 200);
+    padding: 5;
+    text-align: "center";
+}
+
+QSpinBox{
+    height: 34;
+    padding: 5;
+    text-align: "center";
+    color: rgb(235, 235, 235);
+    background-color: rgb(75, 75, 75);
+}
+
+QSpinBox:focus{
+    height: 34;
+    padding: 5;
+    border: 1 solid rgb(0, 170, 200);
+    border-color: rgb(0, 170, 200);
+    text-align: "center";
+}
