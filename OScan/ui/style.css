@@ -5,15 +5,26 @@ QWidget{
 
 QLabel{
     color: rgb(235, 235, 235);
+    text-align: "center";
 }
 
 QGroupBox{
     color: rgb(235, 235, 235);
+    font-size: 14px;
 }
 
 QComboBox{
     color: rgb(235, 235, 235);
-    background: rgb(75, 75, 75);
+    background-color: rgb(75, 75, 75);
+}
+
+QComboBox:hover{
+    border: 1 solid rgb(0, 170, 200);
+    border-color: rgb(0, 170, 200);
+}
+
+QComboBox QAbstractItemView{
+    selection-background-color: rgb(75, 75, 75);
 }
 
 QLineEdit{
@@ -22,6 +33,10 @@ QLineEdit{
 }
 
 QLineEdit:focus{
+    border: 1 solid rgb(241, 205, 100);
+}
+
+QLineEdit:hover{
     border: 1 solid rgb(241, 205, 100);
 }
 
@@ -34,6 +49,14 @@ QDoubleSpinBox{
 }
 
 QDoubleSpinBox:focus{
+    height: 34;
+    border: 1 solid rgb(0, 170, 200);
+    border-color: rgb(0, 170, 200);
+    padding: 5;
+    text-align: "center";
+}
+
+QDoubleSpinBox:hover{
     height: 34;
     border: 1 solid rgb(0, 170, 200);
     border-color: rgb(0, 170, 200);
@@ -54,5 +77,13 @@ QSpinBox:focus{
     padding: 5;
     border: 1 solid rgb(0, 170, 200);
     border-color: rgb(0, 170, 200);
+    text-align: "center";
+}
+
+QSpinBox:hover{
+    height: 34;
+    border: 1 solid rgb(0, 170, 200);
+    border-color: rgb(0, 170, 200);
+    padding: 5;
     text-align: "center";
 }
