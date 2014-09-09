@@ -115,7 +115,7 @@ class UI(QtGui.QWidget):
         '''
         Creates our OScan layout.
         '''
-        self.grp_layout = GroupBox("Pixel Dimensions")
+        self.grp_layout = GroupBox("Camera Settings")
 
         #Width items
         self.width_Lbl = Label("Width :")
@@ -132,8 +132,8 @@ class UI(QtGui.QWidget):
         self.width_cmbBox = ComboBox("width_cmbBox")
         self.width_cmbBox.addItem("Percent")
         self.width_cmbBox.addItem("Pixels")
-        self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 100.0)
-        self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+        self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 0.0)
+        self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                       QtGui.QSizePolicy.Minimum)
 
         #Width Percent/pixel layout.
@@ -152,8 +152,8 @@ class UI(QtGui.QWidget):
         self.height_cmbBox = ComboBox("height_cmbBox")
         self.height_cmbBox.addItem("Percent")
         self.height_cmbBox.addItem("Pixels")
-        self.pph_spnBox = DoubleSpinBox("pph_spnBox", 100.0)
-        self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+        self.pph_spnBox = DoubleSpinBox("pph_spnBox", 0.0)
+        self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                       QtGui.QSizePolicy.Minimum)
 
         #Height Percent/pixel layout.
@@ -168,17 +168,27 @@ class UI(QtGui.QWidget):
         self.height_boxLayout.addWidget(self.height_spnBox)
 
         #Camera aperture.
+        self.aper_Lbl = Label("Camera Aperture H/V: ")
+        self.aper_Lbl.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                    QtGui.QSizePolicy.Minimum)
         self.hAper = DoubleSpinBox("hAper_spnBox", 0.9449244)
         self.hAper.setDecimals(5)
         self.hAper.setValue(0.9449244)
+        self.hAper.setSingleStep(.1)
         self.vAper = DoubleSpinBox("vAper_spnBox", 0.4982999)
         self.vAper.setDecimals(5)
         self.vAper.setValue(0.4982999)
+        self.vAper.setSingleStep(.1)
 
-        #Aperture layout.
-        self.aper_boxLayout = QtGui.QHBoxLayout()
-        self.aper_boxLayout.addWidget(self.hAper)
-        self.aper_boxLayout.addWidget(self.vAper)
+        #Aperture h layout.
+        self.aper_hboxLayout = QtGui.QHBoxLayout()
+        self.aper_hboxLayout.addWidget(self.hAper)
+        self.aper_hboxLayout.addWidget(self.vAper)
+
+        #Aperture v layout.
+        self.aper_vboxLayout = QtGui.QVBoxLayout()
+        self.aper_vboxLayout.addWidget(self.aper_Lbl)
+        self.aper_vboxLayout.addLayout(self.aper_hboxLayout)
 
         #Main layout.
         self.main_boxLayout = QtGui.QVBoxLayout()
@@ -186,13 +196,13 @@ class UI(QtGui.QWidget):
         self.main_boxLayout.addLayout(self.ppw_boxLayout)
         self.main_boxLayout.addLayout(self.height_boxLayout)
         self.main_boxLayout.addLayout(self.pph_boxLayout)
+        self.main_boxLayout.addLayout(self.aper_vboxLayout)
 
         #Set group layout.
         self.grp_layout.setLayout(self.main_boxLayout)
 
         #Final add to central.
         self.central_boxLayout.addWidget(self.grp_layout)
-        self.central_boxLayout.addLayout(self.aper_boxLayout)
 
     def create_connections(self):
         '''
@@ -209,12 +219,12 @@ class UI(QtGui.QWidget):
         self.pph_spnBox.deleteLater()
 
         if index == 1:
-            self.pph_spnBox = SpinBox("pph_spnBox", 1)
-            self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+            self.pph_spnBox = SpinBox("pph_spnBox", 0.0)
+            self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
         elif index == 0:
-            self.pph_spnBox = DoubleSpinBox("pph_spnBox", 100.0)
-            self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+            self.pph_spnBox = DoubleSpinBox("pph_spnBox", 0.0)
+            self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
 
         self.pph_boxLayout.insertWidget(0, self.pph_spnBox)
@@ -227,13 +237,13 @@ class UI(QtGui.QWidget):
         self.ppw_spnBox.deleteLater()
 
         if index == 1:
-            self.ppw_spnBox = SpinBox("ppw_spnBox", 1)
-            self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+            self.ppw_spnBox = SpinBox("ppw_spnBox", 0.0)
+            self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
 
         elif index == 0:
-            self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 100.0)
-            self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+            self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 0.0)
+            self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
 
         self.ppw_boxLayout.insertWidget(0, self.ppw_spnBox)
