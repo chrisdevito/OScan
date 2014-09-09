@@ -15,7 +15,7 @@ class SpinBox(QtGui.QSpinBox):
         super(SpinBox, self).__init__(parent)
         self.setObjectName(name)
         self.setMaximum(100000)
-        self.setMinimum(-100000)
+        self.setMinimum(0.0)
         self.setValue(value)
 
 
@@ -30,7 +30,7 @@ class DoubleSpinBox(QtGui.QDoubleSpinBox):
         super(DoubleSpinBox, self).__init__(parent)
         self.setObjectName(name)
         self.setMaximum(100000)
-        self.setMinimum(-100000)
+        self.setMinimum(0.0)
         self.setValue(value)
 
 
@@ -118,10 +118,12 @@ class UI(QtGui.QWidget):
         self.grp_layout = GroupBox("Camera Settings")
 
         #Width items
-        self.width_Lbl = Label("Width :")
+        self.width_Lbl = Label("Width : ")
         self.width_Lbl.setSizePolicy(QtGui.QSizePolicy.Maximum,
                                      QtGui.QSizePolicy.Minimum)
         self.width_spnBox = SpinBox("width_spnBox", 1920)
+        self.width_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                        QtGui.QSizePolicy.Minimum)
 
         #Width layout
         self.width_boxLayout = QtGui.QHBoxLayout()
@@ -132,6 +134,8 @@ class UI(QtGui.QWidget):
         self.width_cmbBox = ComboBox("width_cmbBox")
         self.width_cmbBox.addItem("Percent")
         self.width_cmbBox.addItem("Pixels")
+        self.width_cmbBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                        QtGui.QSizePolicy.Minimum)
         self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 0.0)
         self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                       QtGui.QSizePolicy.Minimum)
@@ -140,18 +144,27 @@ class UI(QtGui.QWidget):
         self.ppw_boxLayout = QtGui.QHBoxLayout()
         self.ppw_boxLayout.addWidget(self.ppw_spnBox)
         self.ppw_boxLayout.addWidget(self.width_cmbBox)
-        self.ppw_boxLayout.setContentsMargins(48, 0, 0, 0)
+        self.ppw_boxLayout.setContentsMargins(52, 0, 0, 0)
 
         #Height items
         self.height_Lbl = Label("Height:")
         self.height_Lbl.setSizePolicy(QtGui.QSizePolicy.Maximum,
                                       QtGui.QSizePolicy.Minimum)
         self.height_spnBox = SpinBox("height_spnBox", 1080)
+        self.height_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                         QtGui.QSizePolicy.Minimum)
+
+        #Height layout
+        self.height_boxLayout = QtGui.QHBoxLayout()
+        self.height_boxLayout.addWidget(self.height_Lbl)
+        self.height_boxLayout.addWidget(self.height_spnBox)
 
         #Height Percent/pixel layout.
         self.height_cmbBox = ComboBox("height_cmbBox")
         self.height_cmbBox.addItem("Percent")
         self.height_cmbBox.addItem("Pixels")
+        self.height_cmbBox.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                         QtGui.QSizePolicy.Minimum)
         self.pph_spnBox = DoubleSpinBox("pph_spnBox", 0.0)
         self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                       QtGui.QSizePolicy.Minimum)
@@ -160,12 +173,7 @@ class UI(QtGui.QWidget):
         self.pph_boxLayout = QtGui.QHBoxLayout()
         self.pph_boxLayout.addWidget(self.pph_spnBox)
         self.pph_boxLayout.addWidget(self.height_cmbBox)
-        self.pph_boxLayout.setContentsMargins(48, 0, 0, 0)
-
-        #Height layout
-        self.height_boxLayout = QtGui.QHBoxLayout()
-        self.height_boxLayout.addWidget(self.height_Lbl)
-        self.height_boxLayout.addWidget(self.height_spnBox)
+        self.pph_boxLayout.setContentsMargins(52, 0, 0, 0)
 
         #Camera aperture.
         self.aper_Lbl = Label("Camera Aperture H/V: ")
@@ -222,6 +230,7 @@ class UI(QtGui.QWidget):
             self.pph_spnBox = SpinBox("pph_spnBox", 0.0)
             self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
+
         elif index == 0:
             self.pph_spnBox = DoubleSpinBox("pph_spnBox", 0.0)
             self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
