@@ -115,7 +115,7 @@ class UI(QtGui.QWidget):
 
         #Our main layout
         self.central_boxLayout = QtGui.QVBoxLayout()
-        self.central_boxLayout.setSpacing(2)
+        self.central_boxLayout.setSpacing(10)
         self.central_boxLayout.setContentsMargins(10, 10, 10, 10)
         self.setLayout(self.central_boxLayout)
 
@@ -130,6 +130,8 @@ class UI(QtGui.QWidget):
         '''
         self.camGrp_layout = GroupBox("Camera Settings")
         self.outGrp_layout = GroupBox("Output Settings")
+        self.camGrp_layout.setFlat(True)
+        self.outGrp_layout.setFlat(True)
 
         self.cam_gridLayout = QtGui.QGridLayout()
         self.cam_gridLayout.setContentsMargins(10, 5, 10, 5)
@@ -254,13 +256,13 @@ class UI(QtGui.QWidget):
         self.aper_Lbl.setAlignment(
             QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.hAper = DoubleSpinBox("hAper_spnBox", 0.9449244)
-        self.hAper.setDecimals(5)
+        self.hAper.setDecimals(7)
         self.hAper.setValue(0.9449244)
-        self.hAper.setSingleStep(.1)
+        self.hAper.setSingleStep(.01)
         self.vAper = DoubleSpinBox("vAper_spnBox", 0.4982999)
-        self.vAper.setDecimals(5)
+        self.vAper.setDecimals(7)
         self.vAper.setValue(0.4982999)
-        self.vAper.setSingleStep(.1)
+        self.vAper.setSingleStep(.01)
 
     def create_connections(self):
         '''
@@ -287,6 +289,7 @@ class UI(QtGui.QWidget):
                                           QtGui.QSizePolicy.Minimum)
 
         self.cam_gridLayout.addWidget(self.pph_spnBox, 2, 1)
+        self.pph_spnBox.setFocus()
 
     def replaceWSpinBox(self, index):
         '''
@@ -306,3 +309,4 @@ class UI(QtGui.QWidget):
                                           QtGui.QSizePolicy.Minimum)
 
         self.cam_gridLayout.addWidget(self.ppw_spnBox, 1, 1)
+        self.ppw_spnBox.setFocus()

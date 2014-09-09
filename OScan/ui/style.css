@@ -11,33 +11,39 @@ QLabel{
 QGroupBox{
     color: rgb(235, 235, 235);
     font-size: 14px;
+    padding: 20px; 
+    border: 1 solid rgb(150, 150, 150);
+    border-radius: 5px;
 }
 
 QComboBox{
     color: rgb(235, 235, 235);
+    border: 1 solid rgb(50, 50, 50);
     background-color: rgb(75, 75, 75);
 }
 
 QComboBox:hover{
-    border: 1 solid rgb(0, 170, 200);
-    border-color: rgb(0, 170, 200);
+    border: 1 solid rgb(255, 175, 0);
+    border-color: rgb(255, 175, 0);
 }
 
 QComboBox QAbstractItemView{
-    selection-background-color: rgb(75, 75, 75);
+    selection-background-color: rgb(255, 175, 0);
 }
 
 QLineEdit{
     color: rgb(235, 235, 235);
+    border: 1 solid rgb(50, 50, 50);
     background-color: rgb(75, 75, 75);
+    selection-background-color: rgb(125, 125, 125);
 }
 
 QLineEdit:focus{
-    border: 1 solid rgb(241, 205, 100);
+    border: 1 solid rgb(255, 175, 0);
 }
 
 QLineEdit:hover{
-    border: 1 solid rgb(241, 205, 100);
+    border: 1 solid rgb(255, 175, 0);
 }
 
 QDoubleSpinBox{
@@ -45,13 +51,15 @@ QDoubleSpinBox{
     padding: 5;
     text-align: "center";
     color: rgb(235, 235, 235);
+    border: 1 solid rgb(50, 50, 50);
     background-color: rgb(75, 75, 75);
+    selection-background-color: rgb(125, 125, 125);
 }
 
 QDoubleSpinBox:focus{
     height: 34;
     border: 1 solid rgb(0, 170, 200);
-    border-color: rgb(0, 170, 200);
+    border-color: rgb(255, 175, 0);
     padding: 5;
     text-align: "center";
 }
@@ -59,7 +67,7 @@ QDoubleSpinBox:focus{
 QDoubleSpinBox:hover{
     height: 34;
     border: 1 solid rgb(0, 170, 200);
-    border-color: rgb(0, 170, 200);
+    border-color: rgb(255, 175, 0);
     padding: 5;
     text-align: "center";
 }
@@ -68,22 +76,24 @@ QSpinBox{
     height: 34;
     padding: 5;
     text-align: "center";
+    border: 1 solid rgb(50, 50, 50);
     color: rgb(235, 235, 235);
     background-color: rgb(75, 75, 75);
+    selection-background-color: rgb(125, 125, 125);
 }
 
 QSpinBox:focus{
     height: 34;
     padding: 5;
     border: 1 solid rgb(0, 170, 200);
-    border-color: rgb(0, 170, 200);
+    border-color: rgb(255, 175, 0);
     text-align: "center";
 }
 
 QSpinBox:hover{
     height: 34;
     border: 1 solid rgb(0, 170, 200);
-    border-color: rgb(0, 170, 200);
+    border-color: rgb(255, 175, 0);
     padding: 5;
     text-align: "center";
 }
