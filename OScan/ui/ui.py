@@ -4,6 +4,19 @@ from PySide import QtGui, QtCore
 DIR = os.path.dirname(__file__)
 
 
+class LineEdit(QtGui.QLineEdit):
+    '''
+    Inherits QLineEdit and creates it.
+    '''
+    def __init__(self, name, value, parent=None):
+        '''
+        Our line init.
+        '''
+        super(LineEdit, self).__init__(parent)
+        self.setObjectName(name)
+        self.setText(value)
+
+
 class SpinBox(QtGui.QSpinBox):
     '''
     Inherits QSpinBox and creates it.
@@ -87,7 +100,7 @@ class UI(QtGui.QWidget):
         '''
         super(UI, self).__init__(parent)
 
-        self.setWindowTitle("OScan")
+        self.setWindowTitle("OScanUI")
         self.resize(250, 200)
         self.setObjectName("OScanUI")
 
@@ -115,20 +128,85 @@ class UI(QtGui.QWidget):
         '''
         Creates our OScan layout.
         '''
-        self.grp_layout = GroupBox("Camera Settings")
+        self.camGrp_layout = GroupBox("Camera Settings")
+        self.outGrp_layout = GroupBox("Output Settings")
+        self.cam_gridLayout = QtGui.QGridLayout()
+        self.output_gridLayout = QtGui.QGridLayout()
 
+        self.create_camLayout()
+        self.create_outLayout()
+
+        #Camera settings layout.
+        self.cam_gridLayout.addWidget(self.width_Lbl,     0, 0)
+        self.cam_gridLayout.addWidget(self.width_spnBox,  0, 1)
+        self.cam_gridLayout.addWidget(self.ppw_spnBox,    1, 1)
+        self.cam_gridLayout.addWidget(self.width_cmbBox,  1, 2)
+        self.cam_gridLayout.addWidget(self.height_Lbl,    2, 0)
+        self.cam_gridLayout.addWidget(self.height_spnBox, 2, 1)
+        self.cam_gridLayout.addWidget(self.pph_spnBox,    3, 1)
+        self.cam_gridLayout.addWidget(self.height_cmbBox, 3, 2)
+        self.cam_gridLayout.setContentsMargins(10, 5, 10, 5)
+        self.camGrp_layout.setLayout(self.cam_gridLayout)
+
+        #Output settings layout.
+        self.output_gridLayout.addWidget(self.outRes_Lbl,      0, 0)
+        self.output_gridLayout.addWidget(self.outWidth_lEdit,  0, 1)
+        self.output_gridLayout.addWidget(self.outHeight_lEdit, 0, 2)
+        self.output_gridLayout.addWidget(self.outAper_Lbl,     1, 0)
+        self.output_gridLayout.addWidget(self.outAperH_lEdit,  1, 1)
+        self.output_gridLayout.addWidget(self.outAperV_lEdit,  1, 2)
+        self.output_gridLayout.setContentsMargins(10, 5, 10, 5)
+        self.outGrp_layout.setLayout(self.output_gridLayout)
+
+        #Final add to central.
+        self.central_boxLayout.addWidget(self.camGrp_layout)
+        self.central_boxLayout.addWidget(self.outGrp_layout)
+
+    def create_outLayout(self):
+        '''
+        Builds the output layout.
+        '''
+        #Output values.
+        self.outRes_Lbl = Label("Resolution:")
+
+        #Res
+        self.outRes_Lbl.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                      QtGui.QSizePolicy.Minimum)
+        self.outWidth_lEdit = LineEdit("outWidth_lEdit", "2254")
+        self.outWidth_lEdit.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                          QtGui.QSizePolicy.Minimum)
+        self.outWidth_lEdit.setReadOnly(True)
+
+        self.outHeight_lEdit = LineEdit("outHeight_lEdit", "1188")
+        self.outHeight_lEdit.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                           QtGui.QSizePolicy.Minimum)
+        self.outHeight_lEdit.setReadOnly(True)
+
+        #Output values.
+        self.outAper_Lbl = Label("Aperture H/V: ")
+        self.outAper_Lbl.setSizePolicy(QtGui.QSizePolicy.Maximum,
+                                       QtGui.QSizePolicy.Minimum)
+        self.outAperH_lEdit = LineEdit("outAper_lEdit", "1.0399705")
+        self.outAperH_lEdit.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                          QtGui.QSizePolicy.Minimum)
+        self.outAperH_lEdit.setReadOnly(True)
+
+        self.outAperV_lEdit = LineEdit("outAper_lEdit", ".5481298")
+        self.outAperV_lEdit.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                          QtGui.QSizePolicy.Minimum)
+        self.outAperV_lEdit.setReadOnly(True)
+
+    def create_camLayout(self):
+        '''
+        Builds the camera settings layout.
+        '''
         #Width items
-        self.width_Lbl = Label("Width : ")
+        self.width_Lbl = Label("Width:")
         self.width_Lbl.setSizePolicy(QtGui.QSizePolicy.Maximum,
                                      QtGui.QSizePolicy.Minimum)
         self.width_spnBox = SpinBox("width_spnBox", 1920)
         self.width_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                         QtGui.QSizePolicy.Minimum)
-
-        #Width layout
-        self.width_boxLayout = QtGui.QHBoxLayout()
-        self.width_boxLayout.addWidget(self.width_Lbl)
-        self.width_boxLayout.addWidget(self.width_spnBox)
 
         #Width Percent/pixel comboBox.
         self.width_cmbBox = ComboBox("width_cmbBox")
@@ -140,12 +218,6 @@ class UI(QtGui.QWidget):
         self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                       QtGui.QSizePolicy.Minimum)
 
-        #Width Percent/pixel layout.
-        self.ppw_boxLayout = QtGui.QHBoxLayout()
-        self.ppw_boxLayout.addWidget(self.ppw_spnBox)
-        self.ppw_boxLayout.addWidget(self.width_cmbBox)
-        self.ppw_boxLayout.setContentsMargins(52, 0, 0, 0)
-
         #Height items
         self.height_Lbl = Label("Height:")
         self.height_Lbl.setSizePolicy(QtGui.QSizePolicy.Maximum,
@@ -153,11 +225,6 @@ class UI(QtGui.QWidget):
         self.height_spnBox = SpinBox("height_spnBox", 1080)
         self.height_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Minimum)
-
-        #Height layout
-        self.height_boxLayout = QtGui.QHBoxLayout()
-        self.height_boxLayout.addWidget(self.height_Lbl)
-        self.height_boxLayout.addWidget(self.height_spnBox)
 
         #Height Percent/pixel layout.
         self.height_cmbBox = ComboBox("height_cmbBox")
@@ -168,12 +235,6 @@ class UI(QtGui.QWidget):
         self.pph_spnBox = DoubleSpinBox("pph_spnBox", 0.0)
         self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                       QtGui.QSizePolicy.Minimum)
-
-        #Height Percent/pixel layout.
-        self.pph_boxLayout = QtGui.QHBoxLayout()
-        self.pph_boxLayout.addWidget(self.pph_spnBox)
-        self.pph_boxLayout.addWidget(self.height_cmbBox)
-        self.pph_boxLayout.setContentsMargins(52, 0, 0, 0)
 
         #Camera aperture.
         self.aper_Lbl = Label("Camera Aperture H/V: ")
@@ -197,20 +258,6 @@ class UI(QtGui.QWidget):
         self.aper_vboxLayout = QtGui.QVBoxLayout()
         self.aper_vboxLayout.addWidget(self.aper_Lbl)
         self.aper_vboxLayout.addLayout(self.aper_hboxLayout)
-
-        #Main layout.
-        self.main_boxLayout = QtGui.QVBoxLayout()
-        self.main_boxLayout.addLayout(self.width_boxLayout)
-        self.main_boxLayout.addLayout(self.ppw_boxLayout)
-        self.main_boxLayout.addLayout(self.height_boxLayout)
-        self.main_boxLayout.addLayout(self.pph_boxLayout)
-        self.main_boxLayout.addLayout(self.aper_vboxLayout)
-
-        #Set group layout.
-        self.grp_layout.setLayout(self.main_boxLayout)
-
-        #Final add to central.
-        self.central_boxLayout.addWidget(self.grp_layout)
 
     def create_connections(self):
         '''
@@ -236,7 +283,7 @@ class UI(QtGui.QWidget):
             self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
 
-        self.pph_boxLayout.insertWidget(0, self.pph_spnBox)
+        self.cam_gridLayout.addWidget(self.pph_spnBox, 3, 1)
 
     def replaceWSpinBox(self, index):
         '''
@@ -255,4 +302,4 @@ class UI(QtGui.QWidget):
             self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
 
-        self.ppw_boxLayout.insertWidget(0, self.ppw_spnBox)
+        self.cam_gridLayout.addWidget(self.ppw_spnBox, 1, 1)
