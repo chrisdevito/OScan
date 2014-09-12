@@ -180,7 +180,8 @@ class UI(QtGui.QWidget):
         self.outRes_Lbl = Label("Resolution W/H:")
         self.outRes_Lbl.setAlignment(
             QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-
+        self.outRes_Lbl.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                      QtGui.QSizePolicy.Minimum)
         #Res
         self.outWidth_lEdit = LineEdit("outWidth_lEdit", "2254")
         self.outWidth_lEdit.setSizePolicy(QtGui.QSizePolicy.Minimum,
@@ -196,6 +197,8 @@ class UI(QtGui.QWidget):
         self.outAper_Lbl = Label("Aperture H/V:")
         self.outAper_Lbl.setAlignment(
             QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.outAper_Lbl.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                       QtGui.QSizePolicy.Minimum)
         self.outAperH_lEdit = LineEdit("outAper_lEdit", "1.0399705")
         self.outAperH_lEdit.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
@@ -214,7 +217,7 @@ class UI(QtGui.QWidget):
         self.widthHeight_Lbl = Label("Resolution W/H:")
         self.widthHeight_Lbl.setAlignment(
             QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-        self.widthHeight_Lbl.setSizePolicy(QtGui.QSizePolicy.Maximum,
+        self.widthHeight_Lbl.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                            QtGui.QSizePolicy.Minimum)
         self.width_spnBox = SpinBox("width_spnBox", 1920)
         self.width_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
@@ -224,6 +227,8 @@ class UI(QtGui.QWidget):
         self.widthOScan_lbl = Label("Overscan W:")
         self.widthOScan_lbl.setAlignment(
             QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.widthOScan_lbl.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                          QtGui.QSizePolicy.Minimum)
         self.width_cmbBox = ComboBox("width_cmbBox")
         self.width_cmbBox.addItem("Percent")
         self.width_cmbBox.addItem("Pixels")
