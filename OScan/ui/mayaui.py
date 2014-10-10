@@ -1,14 +1,16 @@
-from PySide import QtGui
+import shiboken
 from .ui import UI
+from PySide import QtGui
+import maya.cmds as cmds
+import maya.OpenMaya as OpenMaya
+import maya.OpenMayaUI as OpenMayaUI
 
 
 def get_maya_window():
-    '''Gets maya's main window.'''
-
-    import shiboken
-    import maya.OpenMayaUI as mui
-
-    ptr = long(mui.MQtUtil.mainWindow())
+    '''
+    Gets maya's main window.
+    '''
+    ptr = long(OpenMayaUI.MQtUtil.mainWindow())
     return shiboken.wrapInstance(ptr, QtGui.QWidget)
 
 
@@ -16,5 +18,15 @@ def create():
     '''
     Creates the UI.
     '''
-    maya_window = get_maya_window()
-    return UI(parent=maya_window)
+    return maya_UI()
+
+
+class maya_UI(UI):
+    '''
+    Maya UI.
+    '''
+    def __init__(self, parent=get_maya_window()):
+        '''
+        Initializer.
+        '''
+        super(maya_UI, self).__init__(parent)

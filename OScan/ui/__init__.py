@@ -1,2 +1,6 @@
 from .ui import UI
-from .mayaui import create
+
+try:
+    from .mayaui import create
+except:
+    pass
