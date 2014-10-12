@@ -1,10 +1,12 @@
 from decimal import Decimal
 
-def calculateOverscan(oScan=1.1,
-                 xRes=2048,
-                 yRes=1080,
-                 xAper=0.9449244,
-                 yAper=0.4982999):
+
+def calculateOverscan(oScanX=1.1,
+                      oScanY=1.1,
+                      xRes=2048,
+                      yRes=1080,
+                      xAper=0.9449244,
+                      yAper=0.4982999):
     '''
     Calculates a proper overscan resolution
     and aperture for an overscan amount.
@@ -25,21 +27,18 @@ def calculateOverscan(oScan=1.1,
                                  yRes=1080,
                                  xAper=0.9449244,
                                  yAper=0.4982999)
-
     Raises:
-        ValueError: If the oScan is equal to or less than 1.0.
+        None
     '''
-    if oScan <= 1.000:
-        raise ValueError("Overscan value is equal to or less than 1.0")
-
     #Coverting values for decimal.
-    dec_OScan = Decimal(str(oScan))
+    dec_OScanX = Decimal(str(oScanX))
+    dec_OScanY = Decimal(str(oScanY))
     dec_xRes = Decimal(str(xRes))
     dec_yRes = Decimal(str(yRes))
 
     #Calculate overscan res.
-    oXres = dec_xRes * dec_OScan
-    oYres = dec_yRes * dec_OScan
+    oXres = dec_xRes * dec_OScanX
+    oYres = dec_yRes * dec_OScanY
 
     #Round to int.
     resX = round(oXres)
@@ -64,7 +63,8 @@ def calculateOverscan(oScan=1.1,
     return [int(resX), int(resY)], [float(oXAper), float(oYAper)]
 
 if __name__ == '__main__':
-    res, aper = calculateOverscan(oScan=1.1,
+    res, aper = calculateOverscan(oScanX=1.1,
+                                  oScanY=1.1,
                                   xRes=2048,
                                   yRes=1080,
                                   xAper=0.9449244,

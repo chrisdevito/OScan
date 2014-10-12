@@ -1,6 +1,7 @@
 import os
+from decimal import Decimal
 from PySide import QtGui, QtCore
-
+from ..calculator import calculateOverscan
 DIR = os.path.dirname(__file__)
 
 
@@ -107,6 +108,12 @@ class UI(QtGui.QWidget):
         with open(os.path.join(DIR, "style.css")) as f:
             self.setStyleSheet(f.read())
 
+        #Store values to switch easy.
+        self.initPixelW = 0.0
+        self.initPixelH = 0.0
+        self.initPerW = 10.0
+        self.initPerH = 10.0
+
         #Center the window.
         qr = self.frameGeometry()
         cp = QtGui.QDesktopWidget().availableGeometry().center()
@@ -183,7 +190,7 @@ class UI(QtGui.QWidget):
         self.outRes_Lbl.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                       QtGui.QSizePolicy.Minimum)
         #Res
-        self.outWidth_lEdit = LineEdit("outWidth_lEdit", "2254")
+        self.outWidth_lEdit = LineEdit("outWidth_lEdit", "2112")
         self.outWidth_lEdit.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
         self.outWidth_lEdit.setReadOnly(True)
@@ -234,7 +241,7 @@ class UI(QtGui.QWidget):
         self.width_cmbBox.addItem("Pixels")
         self.width_cmbBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                         QtGui.QSizePolicy.Minimum)
-        self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 0.0)
+        self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 10.0)
         self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                       QtGui.QSizePolicy.Minimum)
 
@@ -252,7 +259,7 @@ class UI(QtGui.QWidget):
         self.height_cmbBox.addItem("Pixels")
         self.height_cmbBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Minimum)
-        self.pph_spnBox = DoubleSpinBox("pph_spnBox", 0.0)
+        self.pph_spnBox = DoubleSpinBox("pph_spnBox", 10.0)
         self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                       QtGui.QSizePolicy.Minimum)
 
@@ -275,43 +282,96 @@ class UI(QtGui.QWidget):
         '''
         self.width_cmbBox.currentIndexChanged.connect(self.replaceWSpinBox)
         self.height_cmbBox.currentIndexChanged.connect(self.replaceHSpinBox)
+        self.width_cmbBox.currentIndexChanged.connect(self.calculate)
+        self.height_cmbBox.currentIndexChanged.connect(self.calculate)
+        self.width_spnBox.valueChanged.connect(self.calculate)
+        self.height_spnBox.valueChanged.connect(self.calculate)
+        self.ppw_spnBox.valueChanged.connect(self.calculate)
+        self.pph_spnBox.valueChanged.connect(self.calculate)
+        self.hAper.valueChanged.connect(self.calculate)
+        self.vAper.valueChanged.connect(self.calculate)
 
     def replaceHSpinBox(self, index):
         '''
         Switches QSpinBox with QDoubleSpinBox.
         @param index - Index value of current spin box.
         '''
-        self.pph_spnBox.deleteLater()
-
         if index == 1:
+            self.initPerH = self.pph_spnBox.value()
+            self.pph_spnBox.deleteLater()
             self.pph_spnBox = SpinBox("pph_spnBox", 0.0)
             self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
+            self.pph_spnBox.setValue(self.initPixelH)
 
         elif index == 0:
+            self.initPixelH = self.pph_spnBox.value()
+            self.pph_spnBox.deleteLater()
             self.pph_spnBox = DoubleSpinBox("pph_spnBox", 0.0)
             self.pph_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
+            self.pph_spnBox.setValue(self.initPerH)
 
+        #Add back to the layout.
         self.cam_gridLayout.addWidget(self.pph_spnBox, 2, 1)
         self.pph_spnBox.setFocus()
+        self.pph_spnBox.valueChanged.connect(self.calculate)
 
     def replaceWSpinBox(self, index):
         '''
         Switches QSpinBox with QDoubleSpinBox.
         @param index - Index value of current spin box.
         '''
-        self.ppw_spnBox.deleteLater()
-
         if index == 1:
+            self.initPerW = self.ppw_spnBox.value()
+            self.ppw_spnBox.deleteLater()
             self.ppw_spnBox = SpinBox("ppw_spnBox", 0.0)
             self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
+            self.ppw_spnBox.setValue(self.initPixelW)
 
         elif index == 0:
+            self.initPixelW = self.ppw_spnBox.value()
+            self.ppw_spnBox.deleteLater()
             self.ppw_spnBox = DoubleSpinBox("ppw_spnBox", 0.0)
             self.ppw_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                           QtGui.QSizePolicy.Minimum)
+            self.ppw_spnBox.setValue(self.initPerW)
 
+        #Add back to the layout.
         self.cam_gridLayout.addWidget(self.ppw_spnBox, 1, 1)
         self.ppw_spnBox.setFocus()
+        self.ppw_spnBox.valueChanged.connect(self.calculate)
+
+    def calculate(self):
+        '''
+        Runs the calculator and updates the output values.
+        '''
+        xRes = self.width_spnBox.value()
+        yRes = self.height_spnBox.value()
+        xAper = self.hAper.value()
+        yAper = self.vAper.value()
+
+        if self.width_cmbBox.currentIndex() == 0:
+            oScanX = (self.ppw_spnBox.value() / 100) + 1
+        else:
+            oScanX = float(Decimal(str(xRes +
+                           (self.ppw_spnBox.value()*2)))/Decimal(str(xRes)))
+
+        if self.height_cmbBox.currentIndex() == 0:
+            oScanY = (self.pph_spnBox.value() / 100) + 1
+        else:
+            oScanY = float(Decimal(str(yRes +
+                           (self.pph_spnBox.value()*2)))/Decimal(str(yRes)))
+
+        res, aper = calculateOverscan(oScanX=oScanX,
+                                      oScanY=oScanY,
+                                      xRes=xRes,
+                                      yRes=yRes,
+                                      xAper=xAper,
+                                      yAper=yAper)
+
+        self.outAperH_lEdit.setText(str(aper[0]))
+        self.outAperV_lEdit.setText(str(aper[1]))
+        self.outWidth_lEdit.setText(str(res[0]))
+        self.outHeight_lEdit.setText(str(res[1]))
