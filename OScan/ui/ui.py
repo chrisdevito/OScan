@@ -18,6 +18,19 @@ class LineEdit(QtGui.QLineEdit):
         self.setText(value)
 
 
+class CheckBox(QtGui.QCheckBox):
+    '''
+    Inherits QCheckBox and creates it.
+    '''
+    def __init__(self, name, parent=None):
+        '''
+        Our line init.
+        '''
+        super(CheckBox, self).__init__(parent)
+        self.setObjectName(name)
+        self.setAutoExclusive(False)
+
+
 class SpinBox(QtGui.QSpinBox):
     '''
     Inherits QSpinBox and creates it.
@@ -113,6 +126,9 @@ class UI(QtGui.QWidget):
         self.initPixelH = 0.0
         self.initPerW = 10.0
         self.initPerH = 10.0
+        self.lock = False
+        self.resRatio = None
+        self.oScanRatio = None
 
         #Center the window.
         qr = self.frameGeometry()
@@ -146,6 +162,9 @@ class UI(QtGui.QWidget):
         self.output_gridLayout = QtGui.QGridLayout()
         self.output_gridLayout.setContentsMargins(10, 5, 10, 5)
 
+        self.chk_gridLayout = QtGui.QGridLayout()
+        self.chk_gridLayout.setContentsMargins(10, 5, 10, 5)
+
         self.create_camLayout()
         self.create_outLayout()
 
@@ -171,6 +190,12 @@ class UI(QtGui.QWidget):
         self.output_gridLayout.addWidget(self.outAperH_lEdit,  1, 1)
         self.output_gridLayout.addWidget(self.outAperV_lEdit,  1, 2)
 
+        #Add lock width/height.
+        self.chk_gridLayout.addWidget(self.lockWH_lbl,      0, 0)
+        self.chk_gridLayout.addWidget(self.lockWH_chkBox,   0, 1)
+        self.chk_gridLayout.setAlignment(
+            QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+
         #Set group layouts.
         self.camGrp_layout.setLayout(self.cam_gridLayout)
         self.outGrp_layout.setLayout(self.output_gridLayout)
@@ -178,6 +203,7 @@ class UI(QtGui.QWidget):
         #Final add to central.
         self.central_boxLayout.addWidget(self.camGrp_layout)
         self.central_boxLayout.addWidget(self.outGrp_layout)
+        self.central_boxLayout.addLayout(self.chk_gridLayout)
 
     def create_outLayout(self):
         '''
@@ -229,6 +255,7 @@ class UI(QtGui.QWidget):
         self.width_spnBox = SpinBox("width_spnBox", 1920)
         self.width_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                         QtGui.QSizePolicy.Minimum)
+        self.width_spnBox.setMinimum(1.0)
 
         #Width Percent/pixel comboBox.
         self.widthOScan_lbl = Label("Overscan W:")
@@ -249,6 +276,7 @@ class UI(QtGui.QWidget):
         self.height_spnBox = SpinBox("height_spnBox", 1080)
         self.height_spnBox.setSizePolicy(QtGui.QSizePolicy.Minimum,
                                          QtGui.QSizePolicy.Minimum)
+        self.height_spnBox.setMinimum(1.0)
 
         #Height Percent/pixel layout.
         self.heightOScan_lbl = Label("Overscan H:")
@@ -275,6 +303,17 @@ class UI(QtGui.QWidget):
         self.vAper.setDecimals(7)
         self.vAper.setValue(0.4982999)
         self.vAper.setSingleStep(.01)
+        self.vAper.setMinimum(.001)
+        self.hAper.setMinimum(.001)
+
+        #Lock wh.
+        self.lockWH_lbl = Label("Constrain Proportions: ")
+        self.lockWH_lbl.setAlignment(
+            QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.lockWH_lbl.setSizePolicy(QtGui.QSizePolicy.Minimum,
+                                      QtGui.QSizePolicy.Minimum)
+        self.lockWH_chkBox = CheckBox("lockWH")
+        self.lockWH_chkBox.setChecked(False)
 
     def create_connections(self):
         '''
@@ -284,12 +323,132 @@ class UI(QtGui.QWidget):
         self.height_cmbBox.currentIndexChanged.connect(self.replaceHSpinBox)
         self.width_cmbBox.currentIndexChanged.connect(self.calculate)
         self.height_cmbBox.currentIndexChanged.connect(self.calculate)
-        self.width_spnBox.valueChanged.connect(self.calculate)
-        self.height_spnBox.valueChanged.connect(self.calculate)
-        self.ppw_spnBox.valueChanged.connect(self.calculate)
-        self.pph_spnBox.valueChanged.connect(self.calculate)
+        self.width_spnBox.valueChanged.connect(self.widthLock)
+        self.height_spnBox.valueChanged.connect(self.heightLock)
+        self.ppw_spnBox.valueChanged.connect(self.oScanXLock)
+        self.pph_spnBox.valueChanged.connect(self.oScanYLock)
         self.hAper.valueChanged.connect(self.calculate)
         self.vAper.valueChanged.connect(self.calculate)
+
+        self.lockWH_chkBox.stateChanged.connect(self.setRatios)
+
+    def oScanXLock(self):
+        '''
+        Deals with overscan X Lock.
+        '''
+        isChecked = self.lockWH_chkBox.isChecked()
+        if isChecked:
+            xVal = float(self.ppw_spnBox.value())
+            yVal = float(self.pph_spnBox.value())
+            checkY = round(xVal * (1.0/self.oScanRatio))
+
+            if self.pph_spnBox.hasFocus():
+                self.calculate()
+
+            elif not yVal == checkY:
+                if self.width_cmbBox.currentIndex() == 0:
+                    self.pph_spnBox.setValue(checkY)
+                else:
+                    self.pph_spnBox.setValue(int(checkY))
+                return
+
+            else:
+                self.calculate()
+
+        else:
+            self.calculate()
+
+    def oScanYLock(self):
+        '''
+        Deals with overscan X Lock.
+        '''
+        isChecked = self.lockWH_chkBox.isChecked()
+        if isChecked:
+            xVal = float(self.ppw_spnBox.value())
+            yVal = float(self.pph_spnBox.value())
+            checkX = round(yVal * self.oScanRatio)
+
+            if self.ppw_spnBox.hasFocus():
+                self.calculate()
+
+            elif not xVal == checkX:
+                if self.width_cmbBox.currentIndex() == 0:
+                    self.ppw_spnBox.setValue(checkX)
+                else:
+                    self.ppw_spnBox.setValue(int(checkX))
+
+                return
+
+            else:
+                self.calculate()
+
+        else:
+            self.calculate()
+
+    def widthLock(self):
+        '''
+        Checks for width lock.
+        '''
+        isChecked = self.lockWH_chkBox.isChecked()
+
+        if isChecked:
+            hVal = float(self.width_spnBox.value())
+            vVal = float(self.height_spnBox.value())
+            checkV = round(hVal * (1.0/self.resRatio))
+
+            if self.height_spnBox.hasFocus():
+                self.calculate()
+
+            if not vVal == checkV:
+                self.height_spnBox.setValue(int(checkV))
+                return
+
+            else:
+                self.calculate()
+        else:
+            self.calculate()
+
+    def heightLock(self):
+        '''
+        Checks for height lock.
+        '''
+        isChecked = self.lockWH_chkBox.isChecked()
+        if isChecked:
+            hVal = float(self.width_spnBox.value())
+            vVal = float(self.height_spnBox.value())
+            checkH = round(vVal * self.resRatio)
+
+            if self.width_spnBox.hasFocus():
+                self.calculate()
+
+            elif not hVal == checkH:
+                self.width_spnBox.setValue(int(checkH))
+                return
+
+            else:
+                self.calculate()
+
+        else:
+            self.calculate()
+
+    def setRatios(self):
+        '''
+        Checks for locked dimensions and builds a ratio for them.
+        '''
+        isChecked = self.lockWH_chkBox.isChecked()
+        if isChecked:
+            self.lock = True
+            self.resRatio = (float(self.width_spnBox.value()) /
+                             float(self.height_spnBox.value()))
+            try:
+                self.oScanRatio = (float(self.ppw_spnBox.value()) /
+                                   float(self.pph_spnBox.value()))
+            except:
+                self.oScanRatio = 1.0
+        else:
+            self.lock = False
+            self.resRatio = None
+            self.oScanRatio = None
 
     def replaceHSpinBox(self, index):
         '''
@@ -315,7 +474,15 @@ class UI(QtGui.QWidget):
         #Add back to the layout.
         self.cam_gridLayout.addWidget(self.pph_spnBox, 2, 1)
         self.pph_spnBox.setFocus()
-        self.pph_spnBox.valueChanged.connect(self.calculate)
+        self.pph_spnBox.valueChanged.connect(self.oScanYLock)
+
+        #Keep locked.
+        isChecked = self.lockWH_chkBox.isChecked()
+        if isChecked:
+            if self.width_cmbBox.hasFocus():
+                self.setRatios()
+            else:
+                self.width_cmbBox.setCurrentIndex(index)
 
     def replaceWSpinBox(self, index):
         '''
@@ -341,7 +508,15 @@ class UI(QtGui.QWidget):
         #Add back to the layout.
         self.cam_gridLayout.addWidget(self.ppw_spnBox, 1, 1)
         self.ppw_spnBox.setFocus()
-        self.ppw_spnBox.valueChanged.connect(self.calculate)
+        self.ppw_spnBox.valueChanged.connect(self.oScanXLock)
+
+        #Keep locked.
+        isChecked = self.lockWH_chkBox.isChecked()
+        if isChecked:
+            if self.height_cmbBox.hasFocus():
+                self.setRatios()
+            else:
+                self.height_cmbBox.setCurrentIndex(index)
 
     def calculate(self):
         '''
