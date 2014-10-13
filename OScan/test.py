@@ -7,7 +7,7 @@ sys.path.insert(0, DIR)
 import OScan
 
 try:
-    reload(OScan.Calculator)
+    reload(OScan.calculator)
 except:
     pass
 
