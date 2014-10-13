@@ -24,7 +24,7 @@ class CheckBox(QtGui.QCheckBox):
     '''
     def __init__(self, name, parent=None):
         '''
-        Our line init.
+        Our checkbox init.
         '''
         super(CheckBox, self).__init__(parent)
         self.setObjectName(name)
@@ -37,7 +37,7 @@ class SpinBox(QtGui.QSpinBox):
     '''
     def __init__(self, name, value, parent=None):
         '''
-        Our line init.
+        Our spinbox init.
         '''
         super(SpinBox, self).__init__(parent)
         self.setObjectName(name)
@@ -52,7 +52,7 @@ class DoubleSpinBox(QtGui.QDoubleSpinBox):
     '''
     def __init__(self, name, value, parent=None):
         '''
-        Our line init.
+        Our double spinbox init.
         '''
         super(DoubleSpinBox, self).__init__(parent)
         self.setObjectName(name)
@@ -67,7 +67,7 @@ class ComboBox(QtGui.QComboBox):
     '''
     def __init__(self, name, parent=None):
         '''
-        Our line init.
+        Our combo init.
         '''
         super(ComboBox, self).__init__(parent)
         self.setObjectName(name)
@@ -98,15 +98,15 @@ class GroupBox(QtGui.QGroupBox):
     '''
     def __init__(self, name, parent=None):
         '''
-        Our label init.
+        Our group init.
         '''
         super(GroupBox, self).__init__(name, parent)
         self.setObjectName("{0}_grpBox".format(name))
 
 
-class UI(QtGui.QWidget):
+class UI(QtGui.QDialog):
     '''
-    QMainWindow for OScan.
+    QDialog for OScan.
     '''
     def __init__(self, parent=None):
         '''
@@ -126,6 +126,8 @@ class UI(QtGui.QWidget):
         self.initPixelH = 0.0
         self.initPerW = 10.0
         self.initPerH = 10.0
+        
+        #Init values for lock.
         self.lock = False
         self.resRatio = None
         self.oScanRatio = None
@@ -360,7 +362,7 @@ class UI(QtGui.QWidget):
 
     def oScanYLock(self):
         '''
-        Deals with overscan X Lock.
+        Deals with overscan Y Lock.
         '''
         isChecked = self.lockWH_chkBox.isChecked()
         if isChecked:
