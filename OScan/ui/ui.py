@@ -126,7 +126,7 @@ class UI(QtGui.QDialog):
         self.initPixelH = 0.0
         self.initPerW = 10.0
         self.initPerH = 10.0
-        
+
         #Init values for lock.
         self.lock = False
         self.resRatio = None
