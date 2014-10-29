@@ -1,21 +1,42 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
+import os
 import sys
 from PySide import QtGui, QtCore
+DIR = os.path.dirname(__file__)
 
 
-class Example(QtGui.QWidget):
+class OScanViewer(QtGui.QWidget):
+    '''
+    Creates the overscan viewer.
+    '''
+    def __init__(self, width=720, height=480):
+        super(OScanViewer, self).__init__()
 
-    def __init__(self):
-        super(Example, self).__init__()
-        self.width = 720
-        self.height = 480
+        self.oScanX = 1.2
+        self.oScanY = 1.2
+
+        self.width = width
+        self.height = height
+
+        self.oWidth = int(self.width * self.oScanX)
+        self.oHeight = int(self.height * self.oScanY)
+
+        self.centerX = int((self.oWidth - self.width)/2.0)
+        self.centerY = int((self.oHeight - self.height)/2.0)
+
+        ponyoPath = os.path.join(DIR, "images/ponyo.jpeg")
+
+        piximage = QtGui.QPixmap(ponyoPath)
+        piximage = piximage.scaled(
+            width, height, QtCore.Qt.KeepAspectRatioByExpanding)
+        piximage.scroll(100, 0, 0, 0, width, height)
+        self.image = piximage.toImage()
 
         self.initUI()
 
     def initUI(self):
-
+        '''
+        Initilizes the ui.
+        '''
         #Center the window.
         qr = self.frameGeometry()
         cp = QtGui.QDesktopWidget().availableGeometry().center()
@@ -23,36 +44,45 @@ class Example(QtGui.QWidget):
         self.move(qr.topLeft())
 
         #Resize.
-        self.resize(self.width, self.height)
+        self.resize(self.oWidth, self.oHeight)
         self.setWindowTitle('OScan Viewer')
         self.show()
 
-    def paintEvent(self, e):
+    def paintEvent(self, event):
+        '''
+        Paint event to draw overscan.
+        @param event - QPainter drawing event.
+        Returns None.
+        '''
+        qPaint = QtGui.QPainter()
+        qPaint.begin(self)
+        self.drawBrushes(qPaint)
+        qPaint.end()
 
-        qp = QtGui.QPainter()
-        qp.begin(self)
-        self.drawBrushes(qp)
-        qp.end()
+    def drawBrushes(self, qPaint):
+        '''
+        Draws the rectangles.
+        @param qPaint - QPainter draw.
+        Returns None.
+        '''
+        res_Brush = QtGui.QBrush(QtCore.Qt.SolidPattern)
+        res_Brush.setColor(QtGui.QColor(255, 255, 255, 255))
+        res_Brush.setTextureImage(self.image)
+        qPaint.setBrush(res_Brush)
+        qPaint.drawRect(self.centerX, self.centerY, self.width, self.height)
 
-    def drawBrushes(self, qp):
-
-        brush = QtGui.QBrush(QtCore.Qt.Dense6Pattern)
-        qp.setBrush(brush)
-        qp.setPen(QtCore.Qt.SolidLine)
-        qp.drawRect(0, 0, self.width, self.height)
-
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        brush.setColor(QtGui.QColor(255, 255, 255, 255))
-        qp.setBrush(brush)
-        centerX = int(self.width/2.0)/2.0
-        centerY = int(self.height/2.0)/2.0
-
-        qp.drawRect(centerX, centerY, self.width/2, self.height/2)
+        oscan_Brush = QtGui.QBrush(QtCore.Qt.Dense6Pattern)
+        oscan_Brush.setColor(QtGui.QColor(0, 0, 0, 255))
+        qPaint.setBrush(oscan_Brush)
+        qPaint.setPen(QtCore.Qt.SolidLine)
+        qPaint.drawRect(
+            0, 0,
+            self.oWidth, self.oHeight)
 
 
 def main():
     app = QtGui.QApplication(sys.argv)
-    ex = Example()
+    ex = OScanViewer(width=720, height=480)
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
