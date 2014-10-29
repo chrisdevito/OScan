@@ -23,13 +23,7 @@ class OScanViewer(QtGui.QWidget):
         self.centerX = int((self.oWidth - self.width)/2.0)
         self.centerY = int((self.oHeight - self.height)/2.0)
 
-        ponyoPath = os.path.join(DIR, "images/ponyo.jpeg")
-
-        piximage = QtGui.QPixmap(ponyoPath)
-        piximage = piximage.scaled(
-            width, height, QtCore.Qt.KeepAspectRatioByExpanding)
-        piximage.scroll(100, 0, 0, 0, width, height)
-        self.image = piximage.toImage()
+        self.imgPath = os.path.join(DIR, "images/ponyo.jpeg")
 
         self.initUI()
 
@@ -65,12 +59,6 @@ class OScanViewer(QtGui.QWidget):
         @param qPaint - QPainter draw.
         Returns None.
         '''
-        res_Brush = QtGui.QBrush(QtCore.Qt.SolidPattern)
-        res_Brush.setColor(QtGui.QColor(255, 255, 255, 255))
-        res_Brush.setTextureImage(self.image)
-        qPaint.setBrush(res_Brush)
-        qPaint.drawRect(self.centerX, self.centerY, self.width, self.height)
-
         oscan_Brush = QtGui.QBrush(QtCore.Qt.Dense6Pattern)
         oscan_Brush.setColor(QtGui.QColor(0, 0, 0, 255))
         qPaint.setBrush(oscan_Brush)
@@ -78,6 +66,12 @@ class OScanViewer(QtGui.QWidget):
         qPaint.drawRect(
             0, 0,
             self.oWidth, self.oHeight)
+
+        res_Brush = QtGui.QBrush(QtCore.Qt.SolidPattern)
+        res_Brush.setColor(QtGui.QColor(255, 255, 255, 255))
+        # res_Brush.setTextureImage(self.image)
+        qPaint.setBrush(res_Brush)
+        qPaint.drawRect(self.centerX, self.centerY, self.width, self.height)
 
 
 def main():
