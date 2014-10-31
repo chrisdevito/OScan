@@ -63,6 +63,9 @@ class OScanViewer(QtGui.QDialog):
         self.oScan_Border = QtGui.QWidget()
         self.oScan_Border.setFixedWidth(self.oWidth)
         self.oScan_Border.setFixedHeight(self.oHeight)
+        palette = self.oScan_Border.palette()
+        palette.setColor(self.oScan_Border.backgroundRole(), QtCore.Qt.black)
+        self.oScan_Border.setAutoFillBackground(True)
         self.oScan_Border.setLayout(self.main_gridLayout)
 
         #Resolution label.
