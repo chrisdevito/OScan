@@ -8,12 +8,13 @@ class OScanViewer(QtGui.QDialog):
     '''
     Creates the overscan viewer.
     '''
-    def __init__(self, parent=None, width=720, height=480):
+    def __init__(
+            self, parent=None, width=720, height=480, oScanX=1.1, oScanY=1.1):
 
         super(OScanViewer, self).__init__(parent)
 
-        self.oScanX = 1.2
-        self.oScanY = 1.2
+        self.oScanX = oScanX
+        self.oScanY = oScanY
 
         self.width = width
         self.height = height
@@ -27,8 +28,12 @@ class OScanViewer(QtGui.QDialog):
         self.imgPath = os.path.join(DIR, "images/ponyo.jpeg")
 
         #Resize.
-        self.setGeometry(0, 0, self.oWidth, self.oHeight)
         self.setWindowTitle('OScan Viewer')
+        self.setFixedSize(self.oWidth, self.oHeight)
+
+        self.setStyleSheet("QWidget{"
+                           "background-color: rgb(0, 0, 0);"
+                           "color: rgb(200, 200, 200);}")
 
         #Init ui.
         self.initUI()
@@ -58,14 +63,15 @@ class OScanViewer(QtGui.QDialog):
         '''
         #Main grid layout.
         self.main_gridLayout = QtGui.QGridLayout()
+        self.main_gridLayout.setContentsMargins(0, 0, 0, 0)
 
         #Build border.
         self.oScan_Border = QtGui.QWidget()
+        self.oScan_Border.setAutoFillBackground(True)
         self.oScan_Border.setFixedWidth(self.oWidth)
         self.oScan_Border.setFixedHeight(self.oHeight)
         palette = self.oScan_Border.palette()
         palette.setColor(self.oScan_Border.backgroundRole(), QtCore.Qt.black)
-        self.oScan_Border.setAutoFillBackground(True)
         self.oScan_Border.setLayout(self.main_gridLayout)
 
         #Resolution label.
@@ -84,6 +90,10 @@ class OScanViewer(QtGui.QDialog):
         #Set layout and add widget.
         self.main_gridLayout.addWidget(self.res_Lbl, 0, 0)
         self.setLayout(self.main_gridLayout)
+
+        print(self.size())
+        print(self.oScan_Border.size())
+        print(self.res_Lbl.size())
 
 
 def main():
