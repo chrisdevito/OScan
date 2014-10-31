@@ -38,6 +38,8 @@ class OScanViewer(QtGui.QDialog):
 
         #Delete on close.
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+
+        #Show.
         self.show()
 
     def initUI(self):
@@ -67,6 +69,8 @@ class OScanViewer(QtGui.QDialog):
 
         #Resolution center.
         self.res_Lbl = QtGui.QLabel()
+        self.res_Lbl.setSizePolicy(
+            QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
 
         #Image.
         self.pixmap = QtGui.QPixmap(self.imgPath)
@@ -74,16 +78,12 @@ class OScanViewer(QtGui.QDialog):
             QtCore.QSize(self.width, self.height),
             QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
         self.res_Lbl.setPixmap(self.pixmap)
-        self.res_Lbl.setFixedWidth(self.width)
-        self.res_Lbl.setFixedHeight(self.height)
-        self.res_Lbl.setAlignment(
-            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.res_Lbl.setScaledContents(True)
 
         #Stacked widget.
         self.main_Stack = QtGui.QStackedWidget()
+        self.main_Stack.setFixedSize(self.oWidth, self.oHeight)
         self.main_Stack.addWidget(self.res_Lbl)
-        self.main_Stack.addWidget(self.oScan_Border)
         self.central_boxLayout.addWidget(self.main_Stack)
 
 
