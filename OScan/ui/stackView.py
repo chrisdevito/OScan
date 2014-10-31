@@ -4,12 +4,13 @@ from PySide import QtGui, QtCore
 DIR = os.path.dirname(__file__)
 
 
-class OScanViewer(QtGui.QStackedWidget):
+class OScanViewer(QtGui.QDialog):
     '''
     Creates the overscan viewer.
     '''
-    def __init__(self, width=720, height=480):
-        super(OScanViewer, self).__init__()
+    def __init__(self, parent=None, width=720, height=480):
+
+        super(OScanViewer, self).__init__(parent)
 
         self.oScanX = 1.2
         self.oScanY = 1.2
@@ -25,7 +26,19 @@ class OScanViewer(QtGui.QStackedWidget):
 
         self.imgPath = os.path.join(DIR, "images/ponyo.jpeg")
 
+        #Resize.
+        self.setGeometry(0, 0, self.oWidth, self.oHeight)
+        self.setWindowTitle('OScan Viewer')
+
+        #Init ui.
         self.initUI()
+
+        #Create layout.
+        self.create_layout()
+
+        #Delete on close.
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.show()
 
     def initUI(self):
         '''
@@ -37,10 +50,41 @@ class OScanViewer(QtGui.QStackedWidget):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-        #Resize.
-        self.resize(self.oWidth, self.oHeight)
-        self.setWindowTitle('OScan Viewer')
-        self.show()
+        #central layout.
+        self.central_boxLayout = QtGui.QVBoxLayout()
+        # self.central_boxLayout.setSpacing(10)
+        # self.central_boxLayout.setContentsMargins(10, 10, 10, 10)
+        self.setLayout(self.central_boxLayout)
+
+    def create_layout(self):
+        '''
+        Creating a layout.
+        '''
+        #Our main layout
+        self.oScan_Border = QtGui.QWidget()
+        self.oScan_Border.setFixedWidth(self.oWidth)
+        self.oScan_Border.setFixedHeight(self.oHeight)
+
+        #Resolution center.
+        self.res_Lbl = QtGui.QLabel()
+
+        #Image.
+        self.pixmap = QtGui.QPixmap(self.imgPath)
+        self.pixmap = self.pixmap.scaled(
+            QtCore.QSize(self.width, self.height),
+            QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+        self.res_Lbl.setPixmap(self.pixmap)
+        self.res_Lbl.setFixedWidth(self.width)
+        self.res_Lbl.setFixedHeight(self.height)
+        self.res_Lbl.setAlignment(
+            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.res_Lbl.setScaledContents(True)
+
+        #Stacked widget.
+        self.main_Stack = QtGui.QStackedWidget()
+        self.main_Stack.addWidget(self.res_Lbl)
+        self.main_Stack.addWidget(self.oScan_Border)
+        self.central_boxLayout.addWidget(self.main_Stack)
 
 
 def main():
