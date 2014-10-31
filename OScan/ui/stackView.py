@@ -13,17 +13,21 @@ class OScanViewer(QtGui.QDialog):
 
         super(OScanViewer, self).__init__(parent)
 
+        self.aspectRatio = float(width)/float(height)
+
+        windowWidth = 475
+
+        sWidth = windowWidth
+        sHeight = round(windowWidth/self.aspectRatio)
+
         self.oScanX = oScanX
         self.oScanY = oScanY
 
-        self.width = width
-        self.height = height
+        self.width = sWidth
+        self.height = sHeight
 
-        self.oWidth = int(self.width * self.oScanX)
-        self.oHeight = int(self.height * self.oScanY)
-
-        self.centerX = int((self.oWidth - self.width)/2.0)
-        self.centerY = int((self.oHeight - self.height)/2.0)
+        self.oWidth = round(self.width * self.oScanX)
+        self.oHeight = round(self.height * self.oScanY)
 
         self.imgPath = os.path.join(DIR, "images/ponyo.jpeg")
 
@@ -98,7 +102,7 @@ class OScanViewer(QtGui.QDialog):
 
 def main():
     app = QtGui.QApplication(sys.argv)
-    ex = OScanViewer(width=720, height=480)
+    ex = OScanViewer(width=720, height=480, oScanX=1.1, oScanY=1.1)
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
