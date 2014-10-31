@@ -52,27 +52,25 @@ class OScanViewer(QtGui.QDialog):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-        #central layout.
-        self.central_boxLayout = QtGui.QVBoxLayout()
-        # self.central_boxLayout.setSpacing(10)
-        # self.central_boxLayout.setContentsMargins(10, 10, 10, 10)
-        self.setLayout(self.central_boxLayout)
-
     def create_layout(self):
         '''
         Creating a layout.
         '''
-        #Our main layout
+        #Main grid layout.
+        self.main_gridLayout = QtGui.QGridLayout()
+
+        #Build border.
         self.oScan_Border = QtGui.QWidget()
         self.oScan_Border.setFixedWidth(self.oWidth)
         self.oScan_Border.setFixedHeight(self.oHeight)
+        self.oScan_Border.setLayout(self.main_gridLayout)
 
-        #Resolution center.
+        #Resolution label.
         self.res_Lbl = QtGui.QLabel()
-        self.res_Lbl.setSizePolicy(
-            QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.res_Lbl.setFixedWidth(self.width)
+        self.res_Lbl.setFixedHeight(self.height)
 
-        #Image.
+        #Set image.
         self.pixmap = QtGui.QPixmap(self.imgPath)
         self.pixmap = self.pixmap.scaled(
             QtCore.QSize(self.width, self.height),
@@ -80,11 +78,9 @@ class OScanViewer(QtGui.QDialog):
         self.res_Lbl.setPixmap(self.pixmap)
         self.res_Lbl.setScaledContents(True)
 
-        #Stacked widget.
-        self.main_Stack = QtGui.QStackedWidget()
-        self.main_Stack.setFixedSize(self.oWidth, self.oHeight)
-        self.main_Stack.addWidget(self.res_Lbl)
-        self.central_boxLayout.addWidget(self.main_Stack)
+        #Set layout and add widget.
+        self.main_gridLayout.addWidget(self.res_Lbl, 0, 0)
+        self.setLayout(self.main_gridLayout)
 
 
 def main():
